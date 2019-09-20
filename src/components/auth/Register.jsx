@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Grid,
   Button,
@@ -9,16 +9,42 @@ import {
   Icon
 } from "semantic-ui-react";
 import { Link } from "react-router-dom";
+import firebase from "../../firebase";
 import "../App.css";
 const Register = () => {
-  const onChange = () => {};
+  const [user, setUser] = useState({
+    name: "",
+    email: "",
+    password: "",
+    passwordconfirmation: ""
+  });
+
+  const onChange = e => {
+    setUser({
+      ...user,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const onSubmit = e => {
+    e.preventDefault();
+    firebase
+      .auth()
+      .createUserWithEmailAndPassword(user.email, user.password)
+      .then(res => {
+        console.log(res);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
   return (
     <Grid textAlign="center" verticalAlign="middle" className="app">
       <Grid.Column style={{ maxWidth: 450 }}>
         <Header as="h2" icon color="orange" textAlign="center">
           <Icon name="tags" color="orange" /> Register for DevChat Box
         </Header>
-        <Form size="large">
+        <Form size="large" onSubmit={onSubmit}>
           <Segment stacked>
             <Form.Input
               fluid

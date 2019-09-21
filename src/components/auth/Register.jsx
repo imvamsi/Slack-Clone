@@ -13,12 +13,13 @@ import firebase from "../../firebase";
 import "../App.css";
 const Register = () => {
   const [user, setUser] = useState({
-    name: "",
+    username: "",
     email: "",
     password: "",
-    passwordconfirmation: ""
+    passwordconfirmation: "",
+    errors: []
   });
-
+  const { username, email, password, passwordconfirmation, errors } = user;
   const onChange = e => {
     setUser({
       ...user,
@@ -26,18 +27,73 @@ const Register = () => {
     });
   };
 
-  const onSubmit = e => {
-    e.preventDefault();
-    firebase
-      .auth()
-      .createUserWithEmailAndPassword(user.email, user.password)
-      .then(res => {
-        console.log(res);
-      })
-      .catch(err => {
-        console.log(err);
+  const isFormvalid = () => {
+    let errors = [];
+    let error;
+    if (isFormEmpty(user)) {
+      error = {
+        message: "please fill in all fields"
+      };
+      setUser({
+        ...user,
+        errors: errors.concat(error)
       });
+      return false;
+    } else if (!isPasswordValid(user)) {
+      error = { message: "password is not valid" };
+      setUser({
+        ...user,
+        errors: errors.concat(error)
+      });
+      return false;
+    } else {
+      return true;
+    }
   };
+
+  const isPasswordValid = ({ password, passwordconfirmation }) => {
+    if (password.length < 6 || passwordconfirmation.length < 6) {
+      return false;
+    } else if (password !== passwordconfirmation) {
+      return false;
+    } else {
+      return true;
+    }
+  };
+
+  const isFormEmpty = ({ username, email, password, passwordconfirmation }) => {
+    return (
+      !username.length ||
+      !email.length ||
+      !password.length ||
+      !passwordconfirmation.length
+    );
+  };
+
+  const displayErrors = errors => {
+    console.log(errors);
+    return errors.map(function(error, i) {
+      console.log(error);
+      return <p key={i}>{error.message}</p>;
+    });
+    //console.log(error);
+  };
+
+  const onSubmit = e => {
+    if (isFormvalid()) {
+      e.preventDefault();
+      firebase
+        .auth()
+        .createUserWithEmailAndPassword(user.email, user.password)
+        .then(res => {
+          console.log(res);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
+  };
+
   return (
     <Grid textAlign="center" verticalAlign="middle" className="app">
       <Grid.Column style={{ maxWidth: 450 }}>
@@ -54,6 +110,7 @@ const Register = () => {
               placeholder="username"
               onChange={onChange}
               type="text"
+              value={username}
             />
 
             <Form.Input
@@ -64,6 +121,7 @@ const Register = () => {
               placeholder="Email Address"
               onChange={onChange}
               type="email"
+              value={email}
             />
 
             <Form.Input
@@ -74,6 +132,7 @@ const Register = () => {
               placeholder="Password"
               onChange={onChange}
               type="password"
+              value={password}
             />
 
             <Form.Input
@@ -84,12 +143,19 @@ const Register = () => {
               placeholder="Confirm Password"
               onChange={onChange}
               type="password"
+              value={passwordconfirmation}
             />
             <Button color="orange" fluid size="large">
               Submit
             </Button>
           </Segment>
         </Form>
+        {errors.length > 0 && (
+          <Message error>
+            <h3>Error</h3>
+            {displayErrors(errors)}
+          </Message>
+        )}
         <Message>
           Already a registered user ? Please, <Link to="/login">Login</Link>
         </Message>

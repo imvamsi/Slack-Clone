@@ -17,9 +17,17 @@ const Register = () => {
     email: "",
     password: "",
     passwordconfirmation: "",
-    errors: []
+    errors: [],
+    loading: false
   });
-  const { username, email, password, passwordconfirmation, errors } = user;
+  const {
+    username,
+    email,
+    password,
+    passwordconfirmation,
+    errors,
+    loading
+  } = user;
   const onChange = e => {
     setUser({
       ...user,
@@ -71,27 +79,47 @@ const Register = () => {
   };
 
   const displayErrors = errors => {
-    console.log(errors);
+    //console.log(errors);
     return errors.map(function(error, i) {
-      console.log(error);
+      //console.log(error);
       return <p key={i}>{error.message}</p>;
     });
     //console.log(error);
   };
 
   const onSubmit = e => {
+    e.preventDefault();
     if (isFormvalid()) {
-      e.preventDefault();
+      setUser({
+        ...user,
+        loading: true
+      });
       firebase
         .auth()
         .createUserWithEmailAndPassword(user.email, user.password)
         .then(res => {
           console.log(res);
+          setUser({
+            ...user,
+            loading: false,
+            errors: []
+          });
         })
         .catch(err => {
           console.log(err);
+          setUser({
+            ...user,
+            errors: errors.concat(err),
+            loading: false
+          });
         });
     }
+  };
+
+  const handleInputError = (errors, inputname) => {
+    return errors.some(error =>
+      error.message.toLowerCase().includes(inputname) ? "error" : ""
+    );
   };
 
   return (
@@ -111,6 +139,7 @@ const Register = () => {
               onChange={onChange}
               type="text"
               value={username}
+              className={handleInputError(errors, "username")}
             />
 
             <Form.Input
@@ -122,6 +151,7 @@ const Register = () => {
               onChange={onChange}
               type="email"
               value={email}
+              className={handleInputError(errors, "email")}
             />
 
             <Form.Input
@@ -133,6 +163,7 @@ const Register = () => {
               onChange={onChange}
               type="password"
               value={password}
+              className={handleInputError(errors, "password")}
             />
 
             <Form.Input
@@ -144,8 +175,15 @@ const Register = () => {
               onChange={onChange}
               type="password"
               value={passwordconfirmation}
+              className={handleInputError(errors, "passwordconfirmation")}
             />
-            <Button color="orange" fluid size="large">
+            <Button
+              disabled={loading}
+              className={loading ? "loading" : ""}
+              color="orange"
+              fluid
+              size="large"
+            >
               Submit
             </Button>
           </Segment>

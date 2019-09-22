@@ -11,6 +11,7 @@ import {
 import { Link } from "react-router-dom";
 import firebase from "../../firebase";
 import "../App.css";
+import md5 from "md5";
 const Register = () => {
   const [user, setUser] = useState({
     username: "",
@@ -18,7 +19,8 @@ const Register = () => {
     password: "",
     passwordconfirmation: "",
     errors: [],
-    loading: false
+    loading: false,
+    userRef: firebase.database().ref("users")
   });
   const {
     username,
@@ -26,7 +28,8 @@ const Register = () => {
     password,
     passwordconfirmation,
     errors,
-    loading
+    loading,
+    userRef
   } = user;
   const onChange = e => {
     setUser({
@@ -78,6 +81,7 @@ const Register = () => {
     );
   };
 
+  //loginerror display
   const displayErrors = errors => {
     //console.log(errors);
     return errors.map(function(error, i) {
@@ -87,6 +91,7 @@ const Register = () => {
     //console.log(error);
   };
 
+  //submit process
   const onSubmit = e => {
     e.preventDefault();
     if (isFormvalid()) {
@@ -94,17 +99,36 @@ const Register = () => {
         ...user,
         loading: true
       });
+
+      //authenticate the user with firebase and update the profile with display name and avatar
+      //and save that user to the database test mode and finally update the state
       firebase
         .auth()
         .createUserWithEmailAndPassword(user.email, user.password)
         .then(res => {
           console.log(res);
-          setUser({
-            ...user,
-            loading: false,
-            errors: []
-          });
+          res.user
+            .updateProfile({
+              displayName: user.username,
+              photoURL: `http://gravatar.com/avatar/${md5(
+                res.user.email
+              )}?d=identicon`
+            })
+            .then(() => {
+              saveUser(res).then(() => {
+                console.log("User saved");
+              });
+            })
+            .catch(err => {
+              console.log(err);
+              setUser({
+                ...user,
+                errors: user.errors.concat(err),
+                loading: false
+              });
+            });
         })
+
         .catch(err => {
           console.log(err);
           setUser({
@@ -114,6 +138,14 @@ const Register = () => {
           });
         });
     }
+  };
+
+  //save the user to the database
+  const saveUser = res => {
+    return userRef.child(res.user.uid).set({
+      name: res.user.displayName,
+      avatar: res.user.photoURL
+    });
   };
 
   const handleInputError = (errors, inputname) => {

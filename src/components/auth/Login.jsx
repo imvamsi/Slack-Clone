@@ -11,7 +11,7 @@ import {
 import { Link } from "react-router-dom";
 import firebase from "../../firebase";
 import "../App.css";
-
+import "./Login.css";
 const Login = () => {
   const [user, setUser] = useState({
     email: "",
@@ -83,8 +83,9 @@ const Login = () => {
   return (
     <Grid textAlign="center" verticalAlign="middle" className="app">
       <Grid.Column style={{ maxWidth: 450 }}>
-        <Header as="h2" icon color="violet" textAlign="center">
-          <Icon name="code branch" color="violet" /> Login to DevChat Box
+        <Header as="h2" icon style={{ color: "#5c6ae6" }} textAlign="center">
+          <Icon name="code branch" style={{ color: "#5c6ae6" }} /> Login to
+          DevChat Box
         </Header>
         <Form size="large" onSubmit={onSubmit}>
           <Segment stacked>
@@ -117,7 +118,8 @@ const Login = () => {
               className={loading ? "loading" : ""}
               color="violet"
               fluid
-              size="large"
+              //   size="large"
+              id="submit-btn"
             >
               Submit
             </Button>
@@ -129,7 +131,7 @@ const Login = () => {
             {displayErrors(errors)}
           </Message>
         )}
-        <Message style={{ marginRight: "15px" }}>
+        <Message style={{ marginRight: "15px", width: "100%" }}>
           New User ?, Please <Link to="/register">Register</Link>
         </Message>
       </Grid.Column>

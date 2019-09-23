@@ -6,7 +6,7 @@ import Login from "./components/auth/Login";
 import Register from "./components/auth/Register";
 import { Provider, connect } from "react-redux";
 import store from "./store";
-import { setUser } from "./actions/Actions";
+import { setUser, clearUser } from "./actions/Actions";
 import {
   BrowserRouter as Router,
   Switch,
@@ -23,6 +23,9 @@ const Root = props => {
         console.log(user);
         props.setUser(user);
         props.history.push("/");
+      } else {
+        props.history.push("/login");
+        props.clearUser();
       }
     });
     //eslint-disable-next-line
@@ -45,7 +48,7 @@ const mapStateFromProps = state => ({
 const RootWithAuth = withRouter(
   connect(
     mapStateFromProps,
-    { setUser }
+    { setUser, clearUser }
   )(Root)
 );
 ReactDOM.render(

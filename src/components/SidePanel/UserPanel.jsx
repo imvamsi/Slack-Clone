@@ -1,13 +1,25 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Grid, Header, Icon, Dropdown } from "semantic-ui-react";
-import firebase from "firebase";
-const UserPanel = () => {
+import firebase from "../../firebase";
+import { connect } from "react-redux";
+const UserPanel = props => {
+  //const [users, setUsers] = useState(props.currentUser);
+
+  //   useEffect(() => {
+  //     setUsers({
+  //       ...users,
+  //       users: props.currentUser
+  //     });
+  //     //eslint-disable-next-line
+  //   }, [props.currentUser]);
+
   const dropDownOptions = () => [
     {
-      id: "user",
+      key: "user",
       text: (
         <span>
-          Logged in as <strong>user</strong>
+          {/* Dont put props in state */}
+          Signed in as <strong>{props.currentUser.displayName}</strong>
         </span>
       ),
       disabled: true
@@ -28,6 +40,8 @@ const UserPanel = () => {
       .signOut()
       .then(console.log("Signed out the user"));
   };
+  // console.log(props.user);
+
   return (
     <Grid style={{ background: "#4c3c4c" }}>
       <Grid.Column>
@@ -40,11 +54,18 @@ const UserPanel = () => {
         </Grid.Row>
 
         <Header style={{ padding: "0.25em" }} as="h4" inverted>
-          <Dropdown trigger={<span>user</span>} options={dropDownOptions()} />
+          <Dropdown
+            trigger={<span>{props.currentUser.displayName}</span>}
+            options={dropDownOptions()}
+          />
         </Header>
       </Grid.Column>
     </Grid>
   );
 };
 
-export default UserPanel;
+const mapStateToProps = state => ({
+  currentUser: state.user.currentUser
+});
+
+export default connect(mapStateToProps)(UserPanel);

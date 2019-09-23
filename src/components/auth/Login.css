@@ -1,0 +1,17 @@
+#submit-btn {
+  border: 1px solid #5c6ae6;
+  color: #5c6ae6;
+  background-color: #fff;
+  padding: 20px 24px;
+  line-height: 0px;
+  margin-top: 6%;
+  margin-bottom: 6%;
+  /* border-radius: 36px; */
+
+  box-shadow: 0 2px 5px 0 rgba(92, 106, 230, 0.3);
+}
+#submit-btn:hover {
+  color: #fff;
+  background-color: #5c6ae6;
+  transition: all 0.15s ease-out;
+}

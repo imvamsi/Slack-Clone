@@ -1,9 +1,12 @@
-import React, { useEffect, Fragment, Component } from "react";
+import React, { useEffect } from "react";
 import ReactDOM from "react-dom";
 
 import App from "./components/App";
 import Login from "./components/auth/Login";
 import Register from "./components/auth/Register";
+import { Provider, connect } from "react-redux";
+import store from "./store";
+import { setUser } from "./actions/Actions";
 import {
   BrowserRouter as Router,
   Switch,
@@ -12,18 +15,22 @@ import {
 } from "react-router-dom";
 import "semantic-ui-css/semantic.min.css";
 import firebase from "./firebase";
+import Spinner from "./Spinner";
 const Root = props => {
   useEffect(() => {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
-          console.log(user);
+        console.log(user);
+        props.setUser(user);
         props.history.push("/");
       }
     });
     //eslint-disable-next-line
   }, []);
 
-  return (
+  return props.loading ? (
+    <Spinner />
+  ) : (
     <Switch>
       <Route exact path="/" component={App} />
       <Route exact path="/login" component={Login} />
@@ -31,10 +38,21 @@ const Root = props => {
     </Switch>
   );
 };
-const RootWithAuth = withRouter(Root);
+
+const mapStateFromProps = state => ({
+  loading: state.user.loading
+});
+const RootWithAuth = withRouter(
+  connect(
+    mapStateFromProps,
+    { setUser }
+  )(Root)
+);
 ReactDOM.render(
-  <Router>
-    <RootWithAuth />
-  </Router>,
+  <Provider store={store}>
+    <Router>
+      <RootWithAuth />
+    </Router>
+  </Provider>,
   document.getElementById("root")
 );

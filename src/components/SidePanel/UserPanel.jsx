@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Grid, Header, Icon, Dropdown } from "semantic-ui-react";
+import { Grid, Header, Icon, Dropdown, Image } from "semantic-ui-react";
 import firebase from "../../firebase";
 import { connect } from "react-redux";
 const UserPanel = props => {
@@ -51,21 +51,26 @@ const UserPanel = props => {
             {/* app header */}
             <Header.Content>Chatbox</Header.Content>
           </Header>
-        </Grid.Row>
 
-        <Header style={{ padding: "0.25em" }} as="h4" inverted>
-          <Dropdown
-            trigger={<span>{props.currentUser.displayName}</span>}
-            options={dropDownOptions()}
-          />
-        </Header>
+          <Header style={{ padding: "0.25em" }} as="h4" inverted>
+            <Dropdown
+              trigger={
+                <span>
+                  <Image
+                    src={props.currentUser.photoURL}
+                    spaced="right"
+                    avatar
+                  />
+                  {props.currentUser.displayName}
+                </span>
+              }
+              options={dropDownOptions()}
+            />
+          </Header>
+        </Grid.Row>
       </Grid.Column>
     </Grid>
   );
 };
 
-const mapStateToProps = state => ({
-  currentUser: state.user.currentUser
-});
-
-export default connect(mapStateToProps)(UserPanel);
+export default UserPanel;

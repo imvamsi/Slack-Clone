@@ -1,4 +1,4 @@
-import { SET_USER } from "./types";
+import { SET_USER, CLEAR_USER } from "./types";
 
 export const setUser = user => async dispatch => {
   dispatch({
@@ -6,5 +6,11 @@ export const setUser = user => async dispatch => {
     payload: {
       currentUser: user
     }
+  });
+};
+
+export const clearUser = () => async dispatch => {
+  dispatch({
+    type: CLEAR_USER
   });
 };

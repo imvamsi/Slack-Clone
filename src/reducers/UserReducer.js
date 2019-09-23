@@ -1,4 +1,4 @@
-import { SET_USER } from "../actions/types";
+import { SET_USER, CLEAR_USER } from "../actions/types";
 
 const initialState = {
   currentUser: null,
@@ -11,6 +11,12 @@ export default (state = initialState, action) => {
       return {
         ...state,
         currentUser: action.payload.currentUser,
+        loading: false
+      };
+
+    case CLEAR_USER:
+      return {
+        ...state,
         loading: false
       };
     default:

@@ -9,6 +9,7 @@ import {
   FormField,
   Button
 } from "semantic-ui-react";
+//import { addListener } from "cluster";
 const Channels = props => {
   // const [channels, setChannels] = useState([]);
   // const [modal, setModal] = useState(false);
@@ -16,23 +17,41 @@ const Channels = props => {
   // const [channeldesc, setChannelDesc] = useState("");
 
   const [channel, setChannel] = useState({
+    channels: [],
     modal: false,
     channelname: "",
     channeldesc: "",
     channelsRef: firebase.database().ref("channels")
   });
+  const { channelname, channeldesc, channelsRef, channels } = channel;
+  useEffect(() => {
+    addListeners();
+    //eslint-disable-next-line
+  }, []);
 
-  const { modal } = channel;
+  const addListeners = () => {
+    const { channels } = channel;
+    let displayChannel = [];
+    channel.channelsRef.on("child_added", snap => {
+      displayChannel.push(snap.val());
+      setChannel({
+        ...channels,
+        channels: displayChannel
+      });
+    });
+  };
 
-  const openModal = () => setChannel({ ...channel, modal: true });
+  const { modal } = channels;
+
+  const openModal = () => setChannel({ ...channels, modal: true });
 
   const closeModal = () => {
     console.log("button clicked");
-    setChannel({ ...channel, modal: false });
+    setChannel({ ...channels, modal: false });
   };
 
   const addChannel = () => {
-    const { channelname, channeldesc, channelsRef, currentUser } = channel;
+    const { channelname, channeldesc, channelsRef } = channels;
     console.log("add clicked");
     const key = channelsRef.push().key;
 
@@ -51,7 +70,7 @@ const Channels = props => {
       .update(newChannelObj)
       .then(() => {
         setChannel({
-          ...channel,
+          ...channels,
           channelname: "",
           channeldesc: ""
         });
@@ -65,7 +84,7 @@ const Channels = props => {
 
   const handleSubmit = e => {
     e.preventDefault();
-    if (isFormValid(channel)) {
+    if (isFormValid(channels)) {
       addChannel();
     }
   };
@@ -77,9 +96,26 @@ const Channels = props => {
 
   const onChange = e => {
     setChannel({
-      ...channel,
+      ...channels,
       [e.target.name]: e.target.value
     });
+  };
+
+  const showChannels = channels => {
+    console.log(channel);
+    return (
+      channels.length > 0 &&
+      channels.map(channel => (
+        <Menu.Item
+          key={channel.id}
+          onClick={() => console.log(channel)}
+          name={channel.name}
+          style={{ opacity: 0.7 }}
+        >
+          # {channel.name}
+        </Menu.Item>
+      ))
+    );
   };
 
   return (
@@ -89,10 +125,11 @@ const Channels = props => {
           <span>
             <Icon name="exchange" /> CHANNELS
           </span>{" "}
-          ({channel.length})
+          ({channels.length})
           <Icon name="add" onClick={openModal} style={{ cursor: "pointer" }} />
         </Menu.Item>
         {/* show all available channels here */}
+        {showChannels(channels)}
       </Menu.Menu>
       {/* modalsection */}
       <Modal basic open={modal} onClose={closeModal}>

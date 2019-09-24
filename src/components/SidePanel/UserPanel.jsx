@@ -43,7 +43,7 @@ const UserPanel = props => {
   // console.log(props.user);
 
   return (
-    <Grid style={{ background: "#4c3c4c" }}>
+    <Grid style={{ background: "#3F0F3F" }}>
       <Grid.Column>
         <Grid.Row style={{ padding: "1.2em", margin: "0" }}>
           <Header inverted as="h2" floated="left">

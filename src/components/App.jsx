@@ -24,3 +24,4 @@ const mapStateToProps = state => ({
 });
 
 export default connect(mapStateToProps)(App);
+//currentUserprop start the prop drilling here

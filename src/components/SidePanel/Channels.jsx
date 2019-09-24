@@ -1,5 +1,7 @@
 import React, { useState, Fragment, useEffect } from "react";
 import firebase from "../../firebase";
+import { connect } from "react-redux";
+import { setCurrentChannel } from "../../actions/Actions";
 import {
   Menu,
   Icon,
@@ -101,6 +103,10 @@ const Channels = props => {
     });
   };
 
+  // const changeChannel = channel => {
+  //   setCurrentChannel(channel);
+  // };
+
   const showChannels = channels => {
     console.log(channel);
     return (
@@ -108,7 +114,8 @@ const Channels = props => {
       channels.map(channel => (
         <Menu.Item
           key={channel.id}
-          onClick={() => console.log(channel)}
+          onClick={() => props.dispatch(setCurrentChannel(channel))}
+          //onClick={() => setCurrentChannel(channel)}
           name={channel.name}
           style={{ opacity: 0.7 }}
         >
@@ -166,5 +173,9 @@ const Channels = props => {
     </Fragment>
   );
 };
+//const mapStateToProps = { setCurrentChannel };
 
-export default Channels;
+function mapStatesToProps(state) {
+  return {};
+}
+export default connect(mapStatesToProps)(Channels);

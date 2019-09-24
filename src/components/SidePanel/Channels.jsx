@@ -35,23 +35,23 @@ const Channels = props => {
     channel.channelsRef.on("child_added", snap => {
       displayChannel.push(snap.val());
       setChannel({
-        ...channels,
+        ...channel,
         channels: displayChannel
       });
     });
   };
 
-  const { modal } = channels;
+  const { modal } = channel;
 
-  const openModal = () => setChannel({ ...channels, modal: true });
+  const openModal = () => setChannel({ ...channel, modal: true });
 
   const closeModal = () => {
     console.log("button clicked");
-    setChannel({ ...channels, modal: false });
+    setChannel({ ...channel, modal: false });
   };
 
   const addChannel = () => {
-    const { channelname, channeldesc, channelsRef } = channels;
+    const { channelname, channeldesc, channelsRef } = channel;
     console.log("add clicked");
     const key = channelsRef.push().key;
 
@@ -70,7 +70,7 @@ const Channels = props => {
       .update(newChannelObj)
       .then(() => {
         setChannel({
-          ...channels,
+          ...channel,
           channelname: "",
           channeldesc: ""
         });
@@ -84,7 +84,7 @@ const Channels = props => {
 
   const handleSubmit = e => {
     e.preventDefault();
-    if (isFormValid(channels)) {
+    if (isFormValid(channel)) {
       addChannel();
     }
   };
@@ -96,7 +96,7 @@ const Channels = props => {
 
   const onChange = e => {
     setChannel({
-      ...channels,
+      ...channel,
       [e.target.name]: e.target.value
     });
   };

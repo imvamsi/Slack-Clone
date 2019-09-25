@@ -15,23 +15,23 @@ export const clearUser = () => async dispatch => {
   });
 };
 
-// export const setCurrentChannel = channel =>  {
-//   return {
-//     type: SET_CURRENT_CHANNEL,
-//     payload: {
-//       currentChannel: channel
-//     }
-//   };
-// };
-
-export const setCurrentChannel = channel => async dispatch => {
-  dispatch({
+export const setCurrentChannel = channel => {
+  return {
     type: SET_CURRENT_CHANNEL,
     payload: {
       currentChannel: channel
     }
-  });
+  };
 };
+
+// export const setCurrentChannel = channel => async dispatch => {
+//   dispatch({
+//     type: SET_CURRENT_CHANNEL,
+//     payload: {
+//       currentChannel: channel
+//     }
+//   });
+//   };
 
 // export function setCurrency() {
 //   return function(dispatch) {

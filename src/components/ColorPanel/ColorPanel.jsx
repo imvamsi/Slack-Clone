@@ -13,7 +13,7 @@ const ColorPanel = () => {
         width="very thin"
       >
         <Divider />
-        <Button icon="add" size="very small" color="green" />
+        <Button icon="add" size="small" color="green" />
       </Sidebar>
     </div>
   );

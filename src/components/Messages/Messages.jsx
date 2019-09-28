@@ -36,10 +36,12 @@ class Messages extends React.Component {
         messages: loadedMessages,
         messagesLoading: false
       });
-      this.uniqueUsers(loadedMessages);
+      this.uniqueUsers(loadedMessages); //if i dont put this in here ... react shows too many renders!this
+      //eventually is connected to componentdidmount and is called without side effects
     });
   };
 
+  //reduce the messages array to a single value
   uniqueUsers = messages => {
     const result = messages.reduce((acc, message) => {
       if (!acc.includes(message.user.name)) {
@@ -61,7 +63,7 @@ class Messages extends React.Component {
         user={this.state.user}
       />
     ));
-
+  //shows the channel name on the UI
   displayChannel = channel => {
     return channel ? `# ${channel.name}` : "";
   };

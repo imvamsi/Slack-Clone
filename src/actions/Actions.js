@@ -1,12 +1,21 @@
 import { SET_USER, CLEAR_USER, SET_CURRENT_CHANNEL } from "./types";
 
-export const setUser = user => async dispatch => {
-  dispatch({
+// export const setUser = user => async dispatch => {
+//   dispatch({
+//     type: SET_USER,
+//     payload: {
+//       currentUser: user
+//     }
+//   });
+// };
+
+export const setUser = user => {
+  return {
     type: SET_USER,
     payload: {
       currentUser: user
     }
-  });
+  };
 };
 
 export const clearUser = () => async dispatch => {

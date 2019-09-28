@@ -28,3 +28,7 @@ body,
   border-left: 2px solid #5c6ae6;
   padding-left: 8px;
 }
+
+.message__image {
+  padding: 1em;
+}

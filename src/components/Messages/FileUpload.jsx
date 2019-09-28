@@ -33,7 +33,7 @@ class FileUpload extends React.Component {
   clearFile = () => this.setState({ file: null });
 
   isAuthorized = filename => {
-    //console.log(mime.lookup(filename));
+    console.log(mime.lookup(filename));
     return this.state.authorized.includes(mime.lookup(filename));
   };
 

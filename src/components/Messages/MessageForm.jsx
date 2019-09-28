@@ -1,99 +1,3 @@
-// import React, { useState } from "react";
-// import firebase from "../../firebase";
-// import { Segment, Input, Button } from "semantic-ui-react";
-// const MessageForm = props => {
-//   // const [msg, setMsg] = useState({
-//   const [message, setMessage] = useState(" ");
-//   const [loading, setLoading] = useState(false);
-//   const [errors, setErrors] = useState([]);
-//   let messagesRef = firebase.database().ref("messages");
-//   // const { message, loading, errors } = msg;
-
-//   // const onChange = e => {
-//   //   setMessage({
-//   //     [e.target.name]: e.target.value
-//   //   });
-//   // };
-
-//   const createMessages = () => {
-//     const messages = {
-//       timestamp: firebase.database.ServerValue.TIMESTAMP,
-//       user: {
-//         id: props.currentUser.uid,
-//         name: props.currentUser.displayName,
-//         avatar: props.currentUser.photoURL
-//       },
-//       content: message
-//     };
-//     return messages;
-//   };
-//   console.log(props.currentUser);
-
-//   const sendMessage = event => {
-//     event.preventDefault();
-//     console.log("clicked");
-//     //const { messagesRef } = props.messagesRef;
-//     if (message) {
-//       setLoading(true);
-//       //console.log(props.messagesRef);
-//       messagesRef
-//         .child(props.currentChannel.id)
-//         .push()
-//         //call methods in paranthesis only for click events other than that call in ()
-//         .set(createMessages())
-//         .then(() => {
-//           setLoading(false);
-//           setErrors([]);
-//           setMessage("");
-//         })
-//         .catch(err => {
-//           console.log(err);
-//           setLoading(false);
-//           setErrors([errors.concat(err)]);
-//         });
-//     } else {
-//       //errors: msg.errors.concat({ message: "add a new message" })
-//       setErrors([errors.concat({ message: "add a new message" })]);
-//     }
-//   };
-
-//   return (
-//     <Segment className="message__form">
-//       <Input
-//         fluid
-//         placeholder="Enter Your Message"
-//         onChange={e => setMessage(e.target.value)}
-//         name="message"
-//         value={message}
-//         style={{ marginBottom: "0.7em" }}
-//         label={<Button icon={"add"} />}
-//         labelPosition="left"
-//         // className={
-//         //   errors.some(e => e.message.includes("message")) ? "error" : ""
-//         // }
-//       />
-//       <Button.Group icon widths="2">
-//         <Button
-//           onClick={sendMessage}
-//           disabled={loading}
-//           color="orange"
-//           content="Add Reply"
-//           labelPosition="left"
-//           icon="edit"
-//         />
-//         <Button
-//           color="teal"
-//           content="Upload Media"
-//           labelPosition="right"
-//           icon="cloud upload"
-//         />
-//       </Button.Group>
-//     </Segment>
-//   );
-// };
-
-// export default MessageForm;
-
 import React from "react";
 import firebase from "../../firebase";
 import { Segment, Button, Input } from "semantic-ui-react";
@@ -160,6 +64,9 @@ class MessageForm extends React.Component {
       });
     }
   };
+  uploadImage = (metadata, file) => {
+    console.log(metadata, file);
+  };
 
   render() {
     const { errors, message, loading } = this.state;
@@ -197,7 +104,11 @@ class MessageForm extends React.Component {
             icon="cloud upload"
             onClick={this.openModal}
           />
-          <FileUpload modal={this.state.modal} closeModal={this.closeModal} />
+          <FileUpload
+            modal={this.state.modal}
+            closeModal={this.closeModal}
+            uploadImage={this.uploadImage}
+          />
         </Button.Group>
       </Segment>
     );

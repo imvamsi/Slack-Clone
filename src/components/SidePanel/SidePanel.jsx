@@ -14,7 +14,7 @@ const SidePanel = props => {
     >
       <UserPanel currentUser={props.currentUser} />
       <Channels currentUser={props.currentUser} />
-      <DirectMessages />
+      <DirectMessages currentUser={props.currentUser} />
     </Menu>
   );
 };

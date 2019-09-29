@@ -13,9 +13,13 @@ class Messages extends React.Component {
     messagesLoading: true,
     channel: this.props.currentChannel,
     user: this.props.currentUser,
-    numofUniqueUsers: ""
+    numofUniqueUsers: "",
+    searchTerm: "",
+    searchLoading: false,
+    searchResults: []
   };
 
+  //mounts the components
   componentDidMount() {
     const { channel, user } = this.state;
 
@@ -67,19 +71,55 @@ class Messages extends React.Component {
   displayChannel = channel => {
     return channel ? `# ${channel.name}` : "";
   };
-  render() {
-    const { messagesRef, messages, channel, user } = this.state;
 
+  handleSearch = e => {
+    this.setState(
+      {
+        searchTerm: e.target.value,
+        searchLoading: true
+      },
+      () => this.searchMessages()
+    );
+  };
+
+  searchMessages = () => {
+    const newMessages = [...this.state.messages];
+    const regex = new RegExp(this.state.searchTerm, "gi");
+    const searchResults = newMessages.reduce((acc, message) => {
+      if (
+        (message.content && message.content.match(regex)) ||
+        message.user.name.match(regex)
+      ) {
+        acc.push(message);
+      }
+      return acc;
+    }, []);
+    this.setState({ searchResults });
+  };
+
+  render() {
+    const {
+      messagesRef,
+      messages,
+      channel,
+      user,
+      searchTerm,
+      searchResults
+    } = this.state;
+    //prettier-disable
     return (
       <React.Fragment>
         <MessagesHeader
           channelName={this.displayChannel(channel)}
           numofuniqueUsers={this.state.numofUniqueUsers}
+          handleSearch={this.handleSearch}
         />
 
         <Segment>
           <Comment.Group className="messages">
-            {this.displayMessages(messages)}
+            {searchTerm
+              ? this.displayMessages(searchResults)
+              : this.displayMessages(messages)}
           </Comment.Group>
         </Segment>
 

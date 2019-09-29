@@ -95,6 +95,7 @@ class Messages extends React.Component {
       return acc;
     }, []);
     this.setState({ searchResults });
+    setTimeout(() => this.setState({ searchLoading: false }), 1000);
   };
 
   render() {
@@ -113,6 +114,7 @@ class Messages extends React.Component {
           channelName={this.displayChannel(channel)}
           numofuniqueUsers={this.state.numofUniqueUsers}
           handleSearch={this.handleSearch}
+          searchLoading={this.state.searchLoading}
         />
 
         <Segment>
